@@ -8,47 +8,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout repo
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      # 2. Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: "20"
 
-      # 3. Install ClawHub
-      - name: Install ClawHub
-        run: npm install -g clawhub
-
-      # 4. Skip Verified Agent Identity (karena error)
-      - name: Skip Verified Agent Identity
-        run: echo "verified-agent-identity not available, skipping..."
-
-      # 5. Install dependencies (kalau ada folder scripts)
+      # ✅ Install dependencies langsung
       - name: Install dependencies
-        run: |
-          if [ -d "scripts" ]; then
-            cd scripts
-            npm install
-          else
-            echo "No scripts folder found, skipping..."
-          fi
+        run: npm install
 
-      # 6. Create Ethereum Identity (optional)
+      # ✅ Masuk ke folder scripts & install kalau perlu
+      - name: Install script dependencies
+        run: |
+          cd scripts
+          npm install || true
+
+      # ✅ Create Identity
       - name: Create Ethereum Identity
-        run: |
-          if [ -f "scripts/createNewEthereumIdentity.js" ]; then
-            node scripts/createNewEthereumIdentity.js
-          else
-            echo "File not found, skipping..."
-          fi
+        run: node scripts/createNewEthereumIdentity.js
 
-      # 7. Skip manual linking (butuh input manual)
+      # ✅ Link Human ke Agent
       - name: Link Human to Agent
-        run: echo "Manual step skipped (requires user input)"
-
-      # 8. Done
-      - name: Complete
-        run: echo "Workflow completed successfully!"
+        run: |
+          node scripts/manualLinkHumanToAgent.js --challenge '{"name":"basiro561","description":"basiro561 AI Agent"}'

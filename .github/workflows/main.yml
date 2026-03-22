@@ -16,21 +16,20 @@ jobs:
         with:
           node-version: "20"
 
-      # ✅ Install dependencies langsung
+      # ✅ LANGSUNG KE FOLDER scripts
       - name: Install dependencies
-        run: npm install
-
-      # ✅ Masuk ke folder scripts & install kalau perlu
-      - name: Install script dependencies
         run: |
           cd scripts
-          npm install || true
+          npm install
 
       # ✅ Create Identity
       - name: Create Ethereum Identity
-        run: node scripts/createNewEthereumIdentity.js
+        run: |
+          cd scripts
+          node createNewEthereumIdentity.js
 
       # ✅ Link Human ke Agent
       - name: Link Human to Agent
         run: |
-          node scripts/manualLinkHumanToAgent.js --challenge '{"name":"basiro561","description":"basiro561 AI Agent"}'
+          cd scripts
+          node manualLinkHumanToAgent.js --challenge '{"name":"basiro561","description":"basiro561 AI Agent"}'
